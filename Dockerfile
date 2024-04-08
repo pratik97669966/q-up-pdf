@@ -9,6 +9,11 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+# Download Chromium during build process (assuming PUPPETEER_EXECUTABLE_PATH is set on OnRender)
+RUN apt-get update && apt-get install -y chromium
+
+# Set the path to Chromium executable
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # Copy the rest of the application code
 COPY . .
