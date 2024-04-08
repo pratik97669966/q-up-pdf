@@ -45,7 +45,13 @@ app.get('/generate-pdf', async (req, res) => {
         `;
 
         // Launch a headless browser
-        const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+        const browser = await puppeteer.launch({
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage' // This flag is necessary when running Puppeteer in a Docker container
+            ]
+        });
         const page = await browser.newPage();
 
         // Set content and options for the PDF
