@@ -38,25 +38,37 @@ function selectFont(text) {
 
 // API endpoint to generate and return PDF
 app.post('/generate-pdf', (req, res) => {
-    // Extract text from request body
-    const { text } = req.body;
-
-    // Create a new PDF document
-    const doc = new PDFDocument();
-
-    // Select appropriate font based on language
-    const fontFileName = selectFont(text);
+    const fontFileName = selectFont("English");
     const fontPath = `./noto-fonts/${fontFileName}`;
+    const doc = new PDFDocument();
+    const { billData } = req.body;
+    // Add content to the PDF document
+    doc.font(fontPath).fontSize(20).text('Invoice', { align: 'center' }).moveDown(0.5);
 
-    // Set font and render text
-    doc.font(fontPath).fontSize(24).text(text, 100, 100);
+    doc.font(fontPath).fontSize(12).text(`Invoice Number: ${billData.invoiceNumber}`).moveDown(0.5);
+    doc.text(`Date: ${billData.date}`).moveDown(1);
 
-    // Pipe the PDF document to the response
+    doc.font(fontPath).text(`Customer: ${billData.customerName}`).moveDown(0.5);
+
+    // Table header
+    doc.font(fontPath).text('Description', 100, doc.y).text('Quantity', 250, doc.y).text('Price', 350, doc.y);
+    doc.font(fontPath).moveDown(0.5);
+
+    // Table rows
+    let totalPrice = 0;
+    billData.items.forEach((item, index) => {
+        const { description, quantity, price } = item;
+        const y = doc.y;
+        doc.text(description, 100, y).text(quantity.toString(), 250, y).text(`$${price.toFixed(2)}`, 350, y);
+        totalPrice += price;
+    });
+    // Total
+    doc.moveDown(1).text(`Total: $${totalPrice.toFixed(2)}`, { align: 'right' });
+    // Finalize the PDF and close the stream
     res.setHeader('Content-Type', 'application/pdf');
     doc.pipe(res);
     doc.end();
 });
-
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
