@@ -1,283 +1,48 @@
 const express = require('express');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 
 const app = express();
 
 app.get('/', async (req, res) => {
     const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invoice</title>
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,900,700,500,300,100);
-            * {
-                margin: 0;
-                box-sizing: border-box;
-            }
-            body {
-                background: #E0E0E0;
-                font-family: 'Roboto', sans-serif;
-                background-image: url('');
-                background-repeat: repeat-y;
-                background-size: 100%;
-            }
-            ::selection {
-                background: #f31544;
-                color: #FFF;
-            }
-            ::moz-selection {
-                background: #f31544;
-                color: #FFF;
-            }
-            h1 {
-                font-size: 1.5em;
-                color: #222;
-            }
-            h2 {
-                font-size: .9em;
-            }
-            h3 {
-                font-size: 1.2em;
-                font-weight: 300;
-                line-height: 2em;
-            }
-            p {
-                font-size: .7em;
-                color: #666;
-                line-height: 1.2em;
-            }
-            #invoiceholder {
-                width: 100%;
-                height: 100%;
-                padding-top: 50px;
-            }
-            #headerimage {
-                z-index: -1;
-                position: relative;
-                top: -50px;
-                height: 350px;
-                background-image: url('http://michaeltruong.ca/images/invoicebg.jpg');
-                overflow: hidden;
-                background-attachment: fixed;
-                background-size: 1920px 80%;
-                background-position: 50% -90%;
-            }
-            #invoice {
-                position: relative;
-                top: -290px;
-                margin: 0 auto;
-                width: 700px;
-                background: #FFF;
-            }
-            [id*='invoice-'] {
-                border-bottom: 1px solid #EEE;
-                padding: 30px;
-            }
-            #invoice-top {
-                min-height: 120px;
-            }
-            #invoice-mid {
-                min-height: 120px;
-            }
-            #invoice-bot {
-                min-height: 250px;
-            }
-            .logo {
-                float: left;
-                height: 60px;
-                width: 60px;
-                background-size: 60px 60px;
-            }
-            .clientlogo {
-                float: left;
-                height: 60px;
-                width: 60px;
-                background-size: 60px 60px;
-                border-radius: 50px;
-            }
-            .info {
-                display: block;
-                float: left;
-                margin-left: 20px;
-            }
-            .title {
-                float: right;
-            }
-            .title p {
-                text-align: right;
-            }
-            #project {
-                margin-left: 52%;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            td {
-                padding: 5px 0 5px 15px;
-                border: 1px solid #EEE
-            }
-            .tabletitle {
-                padding: 5px;
-                background: #EEE;
-            }
-            .service {
-                border: 1px solid #EEE;
-            }
-            .item {
-                width: 50%;
-            }
-            .itemtext {
-                font-size: .9em;
-            }
-            #legalcopy {
-                margin-top: 30px;
-            }
-            form {
-                float: right;
-                margin-top: 30px;
-                text-align: right;
-            }
-            .effect2 {
-                position: relative;
-            }
-            .effect2:before, .effect2:after {
-                z-index: -1;
-                position: absolute;
-                content: "";
-                bottom: 15px;
-                left: 10px;
-                width: 50%;
-                top: 80%;
-                max-width: 300px;
-                background: #777;
-                -webkit-transform: rotate(-3deg);
-                -moz-transform: rotate(-3deg);
-                -o-transform: rotate(-3deg);
-                -ms-transform: rotate(-3deg);
-                transform: rotate(-3deg);
-            }
-            .effect2:after {
-                -webkit-transform: rotate(3deg);
-                -moz-transform: rotate(3deg);
-                -o-transform: rotate(3deg);
-                -ms-transform: rotate(3deg);
-                transform: rotate(3deg);
-                right: 10px;
-                left: auto;
-            }
-            .legal {
-                width: 70%;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="invoiceholder">
-            <div id="headerimage"></div>
-            <div id="invoice" class="effect2">
-                <div id="invoice-top">
-                    <img class="logo" src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/company-logo-design-template-e089327a5c476ce5c70c74f7359c5898_screen.jpg?ts=1672291305"></img>
-                    <div class="info">
-                        <h2>Michael Truong</h2>
-                        <p> hello@michaeltruong.ca <br>
-                            289-335-6503
-                        </p>
-                    </div><!--End Info-->
-                    <div class="title">
-                        <h1>Invoice #1069</h1>
-                        <p>Issued: May 27, 2015 <br>
-                        Payment Due: June 27, 2015
-                        </p>
-                    </div><!--End Title-->
-                </div><!--End InvoiceTop-->
-                <div id="invoice-mid">
-                    <div class="info">
-                        <h2>Client Name</h2>
-                        <p>JohnDoe@gmail.com <br>
-                            555-555-5555 <br>
-                        </p>
-                    </div>
-                    <div id="project">
-                        <h2>Client Name</h2>
-                        <p>JohnDoe@gmail.com <br>
-                            555-555-5555 <br>
-                        </p>
-                     </div>
-                </div>
-                <div id="invoice-bot">
-                    <div id="table">
-                        <table>
-                            <tr class="tabletitle">
-                                <td class="item"><h2>Item Description</h2></td>
-                                <td class="Hours"><h2>Hours</h2></td>
-                                <td class="Rate"><h2>Rate</h2></td>
-                                <td class="subtotal"><h2>Sub-total</h2></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext">Communication</p></td>
-                                <td class="tableitem"><p class="itemtext">5</p></td>
-                                <td class="tableitem"><p class="itemtext">$75</p></td>
-                                <td class="tableitem"><p class="itemtext">$375.00</p></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext">Asset Gathering</p></td>
-                                <td class="tableitem"><p class="itemtext">3</p></td>
-                                <td class="tableitem"><p class="itemtext">$75</p></td>
-                                <td class="tableitem"><p class="itemtext">$225.00</p></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext">Design Development</p></td>
-                                <td class="tableitem"><p class="itemtext">5</p></td>
-                                <td class="tableitem"><p class="itemtext">$75</p></td>
-                                <td class="tableitem"><p class="itemtext">$375.00</p></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext">Animation</p></td>
-                                <td class="tableitem"><p class="itemtext">20</p></td>
-                                <td class="tableitem"><p class="itemtext">$75</p></td>
-                                <td class="tableitem"><p class="itemtext">$1,500.00</p></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext">Animation Revisions</p></td>
-                                <td class="tableitem"><p class="itemtext">10</p></td>
-                                <td class="tableitem"><p class="itemtext">$75</p></td>
-                                <td class="tableitem"><p class="itemtext">$750.00</p></td>
-                            </tr>
-                            <tr class="service">
-                                <td class="tableitem"><p class="itemtext"></p></td>
-                                <td class="tableitem"><p class="itemtext">HST</p></td>
-                                <td class="tableitem"><p class="itemtext">13%</p></td>
-                                <td class="tableitem"><p class="itemtext">$419.25</p></td>
-                            </tr>
-                            <tr class="tabletitle">
-                                <td></td>
-                                <td></td>
-                                <td class="Rate"><h2>Total</h2></td>
-                                <td class="payment"><h2>$3,644.25</h2></td>
-                            </tr>
-                        </table>
-                    </div><!--End Table-->
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="QRZ7QTM9XRPJ6">
-                        <input type="image" src="http://michaeltruong.ca/images/paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                    </form>
-                    <div id="legalcopy">
-                        <p class="legal"><strong>Thank you for your business!</strong>  Payment is expected within 31 days; please process this invoice within that time. There will be a 5% interest charge per month on late invoices. 
-                        </p>
-                    </div>
-                </div><!--End InvoiceBot-->
-            </div><!--End Invoice-->
-        </div><!-- End Invoice Holder-->
-    </body>
-    </html>    
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Medical Prescription</title>
+            </head>
+            <body>
+                <h1>மருத்துவ முன்னோடி</h1>
+                <h2>రోగి పేరు: జాన్ డో</h2>
+                <p>వయసు: 35</p>
+                <p>లింగం: పురుషుడు</p>
+                
+                <h2>स्वास्थ्य स्थिति:</h2>
+                <ul>
+                    <li>फीवर</li>
+                    <li>सूखी खांसी</li>
+                </ul>
+                
+                <h2>रुग्णाची अवस्था:</h2>
+                <ul>
+                    <li>ताप</li>
+                    <li>कॉफी</li>
+                </ul>
+                
+                <h2>રોગનો વર્ણન:</h2>
+                <ul>
+                    <li>તાવ</li>
+                    <li>ખાંસી</li>
+                </ul>
+                
+                <h2>Doctor's Note:</h2>
+                <p>Get plenty of rest. Drink fluids. Follow the prescribed dosage of medicines.</p>
+            </body>
+        </html>
     `;
 
-    const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
     const pdfBuffer = await page.pdf();
 
