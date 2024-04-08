@@ -1,16 +1,17 @@
 {
-  "name": "pdf-generator",
+  "name": "pdf-generation",
   "version": "1.0.0",
-  "description": "Generate PDFs using Puppeteer",
+  "description": "Generate PDF with text in Hindi",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
+  "author": "Your Name",
+  "license": "MIT",
   "dependencies": {
     "express": "4.19.2",
-    "puppeteer": "22.6.3"
-  },
-  "engines": {
-    "node": "21.5.0"
+    "i18n": "0.15.1",
+    "langdetect": "^0.2.1",
+    "pdfkit": "0.15.0"
   }
 }
