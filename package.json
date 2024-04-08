@@ -4,11 +4,12 @@
   "description": "Generate PDF with text in Hindi",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
-  "author": "Your Name",
+  "author": "Your h",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "4.19.2",
     "i18n": "0.15.1",
     "langdetect": "^0.2.1",

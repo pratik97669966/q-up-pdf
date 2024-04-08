@@ -1,5 +1,6 @@
 const express = require('express');
 const PDFDocument = require('pdfkit');
+const bodyParser = require('body-parser'); // Import body-parser module
 const { detect } = require('langdetect');
 
 const app = express();
@@ -17,23 +18,35 @@ const languageToFont = {
     // Add more Indian languages as needed
 };
 
+// Use body-parser middleware to parse JSON data
+app.use(bodyParser.json());
+
 // Function to detect language and select appropriate font
 function selectFont(text) {
-    const lang = detect(text);
+    let lang = 'en'; // Default to English if no language detected
+    try {
+        const detectionResult = detect(text);
+        if (detectionResult.length > 0) {
+            lang = detectionResult[0].lang;
+            console.log('Detected language:', lang); // Log detected language
+        }
+    } catch (error) {
+        console.error('Error detecting language:', error);
+    }
     return languageToFont[lang] || 'english.ttf'; // Default font if language not found
 }
 
 // API endpoint to generate and return PDF
-app.get('/generate-pdf', (req, res) => {
+app.post('/generate-pdf', (req, res) => {
+    // Extract text from request body
+    const { text } = req.body;
+
     // Create a new PDF document
     const doc = new PDFDocument();
 
-    // Text to render
-    const text = 'மருத்துவ!123'; // Hindi text
-
     // Select appropriate font based on language
-    // const fontFileName = selectFont(text);
-    const fontPath = `./noto-fonts/tamil.ttf`;
+    const fontFileName = selectFont(text);
+    const fontPath = `./noto-fonts/${fontFileName}`;
 
     // Set font and render text
     doc.font(fontPath).fontSize(24).text(text, 100, 100);
