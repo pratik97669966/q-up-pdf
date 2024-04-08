@@ -276,9 +276,8 @@ app.get('/generate-prescription', async (req, res) => {
     </html>    
     `;
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ executablePath: '/path/to/chrome' });
     const page = await browser.newPage();
-
     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
     const pdfBuffer = await page.pdf();
 
