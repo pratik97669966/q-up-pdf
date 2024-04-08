@@ -1,9 +1,9 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const app = express();
 
-app.get('/generate-prescription', async (req, res) => {
+app.get('/', async (req, res) => {
     const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -276,7 +276,7 @@ app.get('/generate-prescription', async (req, res) => {
     </html>    
     `;
 
-    const browser = await puppeteer.launch({ executablePath: '/path/to/chrome' });
+    const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
     const pdfBuffer = await page.pdf();
