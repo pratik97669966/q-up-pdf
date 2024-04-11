@@ -406,11 +406,16 @@ app.post('/', async (req, res) => {
     </body>
     
     </html>`;
-    const page = await browserInstance.newPage();
+    const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
+    const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
     const pdfBuffer = await page.pdf();
 
+    await browser.close();
+
+    // Set response headers
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="prescription.pdf"');
     res.send(pdfBuffer);
 });
 

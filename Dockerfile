@@ -8,25 +8,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    gconf-service \
-    libasound2 \
-    libatk1.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libgdk-pixbuf2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libxtst6 \
-    fonts-noto-color-emoji \
-    xdg-utils \
-    --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-    && npm install
+RUN npm install
+# Download Chromium during build process (assuming PUPPETEER_EXECUTABLE_PATH is set on OnRender)
+RUN apt-get update && apt-get install -y chromium
+
+# Set the path to Chromium executable
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # Copy the rest of the application code
 COPY . .
