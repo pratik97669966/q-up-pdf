@@ -199,16 +199,14 @@
         <div>
             <div id="invoice-mid">
                 <div class="info">
-                    <h2>Patil clinic for dental Care</h2>
-                    <p>Kothrud karve road
-                        next to the lane no 6, pune 411020<br>
-                        Contact :7030854004
+                    <h2>${requestData.clinicName}</h2>
+                    <p>${requestData.clinicAddress}<br>
+                        Contact :${requestData.clinicContact}
                     </p>
                 </div>
                 <div id="project">
-                    <h2>Dr Rohan Patil</h2>
-                    <p>MBBS, BHMS, EMS, PGFP, DGO, MDS
-                        CGO, MS, DNB, CCH, MRHI
+                    <h2>${requestData.doctorName}</h2>
+                    <p>${requestData.doctorDegress}
                     </p>
                 </div>
             </div>
@@ -217,13 +215,13 @@
         <div>
             <div id="invoice-mid">
                 <div class="info">
-                    <h2>Name : Pratik Pansare</h2>
-                    <p>Age/Gender : 14/11/1996 (27 years)/Male
+                    <h2>Name : ${requestData.patientName}</h2>
+                    <p>Age/Gender : ${requestData.patientAgeGender}
                     </p>
                 </div>
                 <div id="project">
-                    <h2>Date : 06-02-2024 11:46:AM</h2>
-                    <p>Mobile No : 1065378638
+                    <h2>Date : ${requestData.prescriptionDate}</h2>
+                    <p>Mobile No : ${requestData.patientMobileNumber}
                     </p>
                 </div>
             </div>
@@ -231,36 +229,28 @@
         <hr style="background-color: rgb(226, 223, 223);">
         <div id="invoice" class="effect2">
             <div id="invoice-bot">
-                <p><strong>Symptoms :</strong> Skin redness or dryness (Since 5 Days with testone characteristics,
-                    characteristics 3) (severe) (symp note), Fever of Unknown Origin (FUO) (Since 1 Days with char )
-                    (severity ) (note) (test one: test), Blood in vomit (Since 3 Days with Covid Test 55) (high) (blood
-                    test)</p>
+                <p><strong>लक्षणे : </strong>${requestData.symptoms}</p>
                 <br>
-                <p><strong>Clinical Findings :</strong> Clinical Issue (Since 7 Days with char) (high) (note ), Covid 19
-                    (Since 5 Days with Corona ) (high)
-                    (Test)</p>
-                <br>
-                <p><strong>Diagnosis :</strong> Testicular dysfunction, unspecified (Rule Out) (test), Typhoid fever
-                    with other complications (Rule Out)
-                    (test 1) (test : more, more 1)</p>
+
+                <p><strong>Diagnosis :${requestData.diagnoses}</p>
                 <br>
                 <div id="table">
                     <table>
                         <tr class="tabletitle">
                             <td class="sr">
-                                <h2>RX</h2>
+                                <h2>RX </h2>
                             </td>
                             <td class="item">
-                                <h2>BRANDS</h2>
+                                <h2>BRANDS </h2>
                             </td>
                             <td class="Hours">
-                                <h2>FREQUENCY</h2>
+                                <h2>FREQUENCY </h2>
                             </td>
                             <td class="Rate">
-                                <h2>DURATION</h2>
+                                <h2>DURATION </h2>
                             </td>
                             <td class="subtotal">
-                                <h2>QUANTITY</h2>
+                                <h2>QUANTITY </h2>
                             </td>
                         </tr>
                         <tr class="service">
@@ -349,30 +339,24 @@
                         </tr>
                     </table>
                     <br>
-                    <p><strong>Investigations :</strong> Testosterone, AFB (Acid Fast Bacilli) Culture Test</p>
+                    <p><strong>Investigations :</strong> ${requestData.investigations}</p>
                     <br>
                     <p><strong>General instructions :</strong></p>
-                    <p>- test for hindi<br>
-                        - favorite fruit<br>
-                        - sleep at night<br>
-                        - new added<br>
-                        - walk on street</p>
+                    <p>${requestData.instructions}</p>
                     <br>
-                    <p><strong>Next Follow-up :</strong> Date:- 07-Feb-2024, Wednesday</p>
+                    <p><strong>Next Follow-up :</strong> Date:- ${requestData.followupDate}</p>
                     <br>
-                    <p><strong>Followup Note : </strong> Test note</p>
+                    <p><strong>Followup Note : </strong> ${requestData.followupNote}</p>
                     <br>
                 </div>
             </div>
         </div>
-        <hr style="background-color: rgb(226, 223, 223);">
         <div id="invoice-mid">
             <div class="info">
             </div><!--End Info-->
             <div class="title">
-                <h2>Dr Rohan Patil</h2>
-                <p>MBBS, BHMS, EMS, PGFP, DGO, MDS
-                    CGO, MS, DNB, CCH, MRHI
+                <h2>${requestData.doctorName}</h2>
+                <p>${requestData.doctorDegress}
                 </p>
             </div><!--End Title-->
         </div><!--End InvoiceTop-->
