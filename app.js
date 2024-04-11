@@ -411,7 +411,6 @@ app.post('/', async (req, res) => {
     const pdfBuffer = await page.pdf();
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="prescription.pdf"');
     res.send(pdfBuffer);
 });
 
