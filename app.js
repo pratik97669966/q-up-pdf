@@ -9,7 +9,10 @@ let browserInstance;
 
 app.post('/', async (req, res) => {
     if (!browserInstance) {
-        browserInstance = await puppeteer.launch({ headless: true });
+        browserInstance = await puppeteer.launch({ 
+            executablePath: '/usr/bin/chromium-browser', // Path to Chromium binary
+            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required args for running Puppeteer in Docker
+        });
     }
     
     const requestData = req.body;
