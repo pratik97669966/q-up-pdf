@@ -4,46 +4,40 @@ const fs = require('fs');
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
+const PORT = process.env.PORT || 3000;
 
-let browserInstance;
 
 app.post('/', async (req, res) => {
-    if (!browserInstance) {
-        browserInstance = await puppeteer.launch({ 
-            executablePath: '/usr/bin/chromium-browser', // Path to Chromium binary
-            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Required args for running Puppeteer in Docker
-        });
-    }
-    
-    const requestData = req.body;
-    // Extracting all fields from the request body
-    const clinicAddress = requestData.clinicAddress ;
-    const clinicContact = requestData.clinicContact;
-    const clinicName = requestData.clinicName;
-    const clinicalFindings = requestData.clinicalFindings;
-    const diagnoses = requestData.diagnoses;
-    const doctorName = requestData.doctorName;
-    const instructions = requestData.instructions;
-    const investigations = requestData.investigations;
-    const languageId = requestData.languageId;
-    const medicineDTOS = requestData.medicineDTOS;
-    const symptoms = requestData.symptoms;
-    const patientBookingRequestId = requestData.patientBookingRequestId;
-    const patientName = requestData.patientName;
-    const prescriptionId = requestData.prescriptionId;
-    const entityId = requestData.entityId;
-    const privateInstruction = requestData.privateInstruction;
-    const followupDate = requestData.followupDate;
-    const followupNote = requestData.followupNote;
-    const referredDoctorId = requestData.referredDoctorId;
-    const referredDoctorName = requestData.referredDoctorName;
-    const doctorDegress = requestData.doctorDegress;
-    const patientMobileNumber = requestData.patientMobileNumber;
-    const prescriptionDate = requestData.prescriptionDate;
-    const patientAgeGender = requestData.patientAgeGender;
+    try {
+        const requestData = req.body;
+        // Extracting all fields from the request body
+        const clinicAddress = requestData.clinicAddress;
+        const clinicContact = requestData.clinicContact;
+        const clinicName = requestData.clinicName;
+        const clinicalFindings = requestData.clinicalFindings;
+        const diagnoses = requestData.diagnoses;
+        const doctorName = requestData.doctorName;
+        const instructions = requestData.instructions;
+        const investigations = requestData.investigations;
+        const languageId = requestData.languageId;
+        const medicineDTOS = requestData.medicineDTOS;
+        const symptoms = requestData.symptoms;
+        const patientBookingRequestId = requestData.patientBookingRequestId;
+        const patientName = requestData.patientName;
+        const prescriptionId = requestData.prescriptionId;
+        const entityId = requestData.entityId;
+        const privateInstruction = requestData.privateInstruction;
+        const followupDate = requestData.followupDate;
+        const followupNote = requestData.followupNote;
+        const referredDoctorId = requestData.referredDoctorId;
+        const referredDoctorName = requestData.referredDoctorName;
+        const doctorDegress = requestData.doctorDegress;
+        const patientMobileNumber = requestData.patientMobileNumber;
+        const prescriptionDate = requestData.prescriptionDate;
+        const patientAgeGender = requestData.patientAgeGender;
 
 
-    const htmlContent = `<!DOCTYPE html>
+        const htmlContent = `<!DOCTYPE html>
     <html lang="en">
     
     <head>
@@ -409,20 +403,28 @@ app.post('/', async (req, res) => {
     </body>
     
     </html>`;
-    const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
-    const pdfBuffer = await page.pdf();
+        const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+        const page = await browser.newPage();
 
-    await browser.close();
+        // Set content and options for the PDF
+        await page.setContent(htmlContent);
+        const pdfBuffer = await page.pdf({ format: 'A4' });
 
-    // Set response headers
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="prescription.pdf"');
-    res.send(pdfBuffer);
+        // Close the browser
+        await browser.close();
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="medical_prescription.pdf"');
+
+        // Send the PDF as response
+        res.send(pdfBuffer);
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).send('Error generating PDF');
+    }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
